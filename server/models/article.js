@@ -17,7 +17,7 @@ const schema = mongoose.Schema( {
 }, {
 	versionKey: false
 }
-)
+);
 
 const Article = mongoose.model('Article', schema);
 
@@ -29,4 +29,4 @@ async function createArticle(userData) {
 	}
 }
 
-module.exports = { createArticle }
+module.exports = { createArticle };

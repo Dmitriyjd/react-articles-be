@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const articles = require('./routes/articles');
 const {
 	APP_PORT, db_name, host, db_port, allowedOrigins
 } = require('./config');
@@ -20,6 +21,8 @@ app.use(cors({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use('/api/articles', articles);
 
 //start app, connect to db
 mongoose.connect(`mongodb://${host}:${db_port}/${db_name}`)
