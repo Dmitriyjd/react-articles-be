@@ -21,6 +21,14 @@ const schema = mongoose.Schema( {
 
 const Article = mongoose.model('Article', schema);
 
+async function findArticles(page = 1, limit = 10){
+	try {
+		return await Article.find({ }, null, { limit, skip: (page - 1) * limit });
+	} catch (error) {
+		return error
+	}
+}
+
 async function createArticle(userData) {
 	try {
 		return await Article.create(userData);
@@ -31,14 +39,18 @@ async function createArticle(userData) {
 
 async function findArticleById(id) {
 	try {
-		return await Article.findOne(id)
+		return await Article.findOne({ _id: id })
 	} catch (error) {
 		return error
 	}
 }
 
-async function updateArticleById(id, body) {
-
+async function updateArticleById(id, newData) {
+	try {
+		return await Article.findOneAndUpdate({ _id: id }, newData)
+	}catch (error) {
+		return error;
+	}
 }
 
-module.exports = { createArticle, findArticleById };
+module.exports = { createArticle, findArticleById, updateArticleById, findArticles };

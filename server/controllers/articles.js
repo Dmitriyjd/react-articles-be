@@ -65,11 +65,11 @@ async function updateArticle(req,res){
 				.status(404)
 				.json("Not Found")
 		}
-		const userData = await Article.updateArticle({
+		const userData = await Article.updateArticleById(req.params.id, {
 			...req.body,
 			created_at: existingData.created_at,
 			updated_at: Date.now()
-		})
+		});
 		res
 			.status(200)
 			.json(userData)
@@ -83,7 +83,18 @@ async function updateArticle(req,res){
 }
 
 async function getArticlesByQuery(req,res){
-
+  try{
+    const foundArticlesCount = await Article.findArticles().length;
+    const data = await Article.findArticles(req.query.page, req.query.limit);
+    const pagination = {
+      count: foundArticlesCount,
+      page: req.query.page,
+      limit: req.query.limit,
+    };
+    res
+      .status(200)
+      .json({ data, pagination })
+  }
 }
 
 async function getArticleById(req,res){
