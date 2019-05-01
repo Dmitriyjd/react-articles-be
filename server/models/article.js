@@ -29,4 +29,16 @@ async function createArticle(userData) {
 	}
 }
 
-module.exports = { createArticle };
+async function findArticleById(id) {
+	try {
+		return await Article.findOne(id)
+	} catch (error) {
+		return error
+	}
+}
+
+async function updateArticleById(id, body) {
+
+}
+
+module.exports = { createArticle, findArticleById };

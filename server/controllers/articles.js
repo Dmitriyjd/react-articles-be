@@ -6,8 +6,8 @@ async function createArticle(req,res){
       .status(422)
       .json({
         "errors":[{
-          "field": "title",
-          "error": "title is required",
+          "field": "Title",
+          "error": "Title is Required",
         }]
       })
   }
@@ -16,8 +16,8 @@ async function createArticle(req,res){
       .status(422)
       .json({
         "errors":[{
-          "field": "body",
-          "error": "body is required",
+          "field": "Body",
+          "error": "Body is Required",
         }]
       })
   }
@@ -38,7 +38,48 @@ async function createArticle(req,res){
 }
 
 async function updateArticle(req,res){
-
+	if(!req.body.title){
+		res
+			.status(422)
+			.json({
+				"errors":[{
+					"field": "Title",
+					"error": "Title is Required",
+				}]
+			})
+	}
+	if(!req.body.body){
+		res
+			.status(422)
+			.json({
+				"errors":[{
+					"field": "body",
+					"error": "Body is Required",
+				}]
+			})
+	}
+	try{
+		const existingData = await Article.findArticleById(req.params.id);
+		if(!existingData){
+			res
+				.status(404)
+				.json("Not Found")
+		}
+		const userData = await Article.updateArticle({
+			...req.body,
+			created_at: existingData.created_at,
+			updated_at: Date.now()
+		})
+		res
+			.status(200)
+			.json(userData)
+	} catch (error) {
+		res
+			.status(404)
+			.json({
+				"errors":error,
+			})
+	}
 }
 
 async function getArticlesByQuery(req,res){
@@ -46,7 +87,31 @@ async function getArticlesByQuery(req,res){
 }
 
 async function getArticleById(req,res){
-
+	if(!req.params.id){
+		res
+			.status(422)
+			.json({
+				"errors":[{
+					"field":"Id",
+					"error":"Id is Required"
+				}]
+			})
+	}
+	try{
+		const userData = await Article.findArticleById(req.params.id);
+		res
+			.status(200)
+			.json(userData)
+	} catch (error) {
+		res
+			.status(404)
+			.json({
+				"errors": [{
+					"field": "Id",
+					"error": "Not Found"
+				}]
+			})
+	}
 }
 
 module.exports = { createArticle, updateArticle, getArticlesByQuery, getArticleById };
