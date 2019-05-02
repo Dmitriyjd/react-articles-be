@@ -83,9 +83,14 @@ async function updateArticle(req,res){
 }
 
 async function getArticlesByQuery(req,res){
-  try{
+  try {
     const foundArticlesCount = await Article.findArticles().length;
-    const data = await Article.findArticles(req.query.page, req.query.limit);
+    console.log(foundArticlesCount);
+    let page = req.query.page;
+    let limit = req.query.limit;
+    if(!req.query.page) page = 1;
+    if(!req.query.limit) limit = 10;
+    const data = await Article.findArticles(page, limit);
     const pagination = {
       count: foundArticlesCount,
       page: req.query.page,
@@ -94,7 +99,11 @@ async function getArticlesByQuery(req,res){
     res
       .status(200)
       .json({ data, pagination })
-  }
+  } catch (error) {
+  	res
+			.status(404)
+			.json(error)
+	}
 }
 
 async function getArticleById(req,res){

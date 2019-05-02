@@ -21,7 +21,7 @@ const schema = mongoose.Schema( {
 
 const Article = mongoose.model('Article', schema);
 
-async function findArticles(page = 1, limit = 10){
+async function findArticles(page, limit){
 	try {
 		return await Article.find({ }, null, { limit, skip: (page - 1) * limit });
 	} catch (error) {
