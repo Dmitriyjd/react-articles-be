@@ -30,6 +30,9 @@ mongoose.connect(`mongodb://${host}:${db_port}/${db_name}`)
 		app.listen(APP_PORT, () => {
 			console.info(`App listening on port ${APP_PORT}!`);
 		});
-	});
+	})
+	.catch((error) => {
+		console.log(error)
+});
 
 module.exports = app;
